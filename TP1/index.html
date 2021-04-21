@@ -50,10 +50,18 @@
                 <div class="paintContainer">
                     <h3>Paint + Imagen con Filtros (Entregable 1)</h3>
                     <h5 class="card-title">Nicolas Erasun</h5>
+                    <input type="file" id="inputFile" />
                     <div class="row">
                         <p>Color: <input type="color" id="setColor"></p>
-                        <p>Pincel: <input type="range" id="setAncho" value="5"></p>
+                        <button id="eraser">Gomita</button>
                         <button id="vaciar">Vaciar Canvas</button>
+                    </div>
+                    <div class="row">
+                        <button id="setNegativo">Negativo</button>
+                        <button id="setEscalaGris">Gris</button>
+                        <button id="setBinarizado">Fotocopia</button>
+                        <button id="setBrillo">Brillo</button>
+                        <button id="setSepia">Sepia</button>
                     </div>
                     <canvas class="container_canvas" id="myPaint" width="600" height="400"></canvas>
                 </div>
