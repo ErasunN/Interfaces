@@ -23,41 +23,111 @@ document.addEventListener("DOMContentLoaded", function() {
 
     });
 
-    /* function setBlur() {
+    function setBordes() {
         let imgData = ctx.getImageData(0, 0, image.width, image.height);
-        let pixel = imgData.data
-        console.log(imgData.data);
-        let myBlurArray = [1, 1, 1, 1]
-        let sum = 0
-        let tmpArray = []
 
-        for (let i = 0; i < pixel.length; i++) {
-            sum = 0
-            if (i / 4 != 1) {
-                if (pixel[i - 1] == null) {
-                    tmpArray.push(pixel[i + 2] * myBlurArray[0])
-                } else {
-                    tmpArray.push(pixel[i - 1] * myBlurArray[0])
-                }
-                if (pixel[i] != null) {
-                    tmpArray.push(pixel[i] * myBlurArray[1])
-                }
-                if (pixel[i + 1] != null) {
-                    tmpArray.push(pixel[i + 1] * myBlurArray[2])
-                }
+        let matrizBordes = [
+            [-1, -1, -1],
+            [-1, 8, -1],
+            [-1, -1, -1]
+        ]
+        for (let x = 0; x < imgData.width; x++) {
+            for (let y = 0; y < imgData.height; y++) {
+                pixelMatriz(imgData, x, y, matrizBordes)
             }
-
-            for (let s = 0; s < tmpArray.length; s++) {
-                sum += tmpArray[s]
-            }
-            pixel[i] = Math.floor(sum / tmpArray.length)
         }
-        console.log(
-            pixel
-        );
 
         ctx.putImageData(imgData, 0, 0);
-    } */
+    }
+
+    function setBlur() {
+        let imgData = ctx.getImageData(0, 0, image.width, image.height);
+
+        let matrizBlur = [
+            [1 / 9, 1 / 9, 1 / 9],
+            [1 / 9, 1 / 9, 1 / 9],
+            [1 / 9, 1 / 9, 1 / 9]
+        ]
+        for (let x = 0; x < imgData.width; x++) {
+            for (let y = 0; y < imgData.height; y++) {
+                pixelMatriz(imgData, x, y, matrizBlur)
+            }
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+    }
+
+    let pixelMatriz = (imgData, x, y, matriz) => {
+        //Variables de ubicacion de pixel
+        let ul = ((x - 1 + imgData.width) % imgData.width + imgData.width * ((y - 1 + imgData.height) % imgData.height)) * 4;
+        let uc = ((x - 0 + imgData.width) % imgData.width + imgData.width * ((y - 1 + imgData.height) % imgData.height)) * 4;
+        let ur = ((x + 1 + imgData.width) % imgData.width + imgData.width * ((y - 1 + imgData.height) % imgData.height)) * 4;
+        let ml = ((x - 1 + imgData.width) % imgData.width + imgData.width * ((y + 0 + imgData.height) % imgData.height)) * 4;
+        let mc = ((x - 0 + imgData.width) % imgData.width + imgData.width * ((y + 0 + imgData.height) % imgData.height)) * 4;
+        let mr = ((x + 1 + imgData.width) % imgData.width + imgData.width * ((y + 0 + imgData.height) % imgData.height)) * 4;
+        let ll = ((x - 1 + imgData.width) % imgData.width + imgData.width * ((y + 1 + imgData.height) % imgData.height)) * 4;
+        let lc = ((x - 0 + imgData.width) % imgData.width + imgData.width * ((y + 1 + imgData.height) % imgData.height)) * 4;
+        let lr = ((x + 1 + imgData.width) % imgData.width + imgData.width * ((y + 1 + imgData.height) % imgData.height)) * 4;
+
+        let p0, p1, p2, p3, p4, p5, p6, p7, p8
+
+        p0 = imgData.data[ul] * matriz[0][0];
+        p1 = imgData.data[uc] * matriz[0][1];
+        p2 = imgData.data[ur] * matriz[0][2];
+        p3 = imgData.data[ml] * matriz[1][0];
+        p4 = imgData.data[mc] * matriz[1][1];
+        p5 = imgData.data[mr] * matriz[1][2];
+        p6 = imgData.data[ll] * matriz[2][0];
+        p7 = imgData.data[lc] * matriz[2][1];
+        p8 = imgData.data[lr] * matriz[2][2];
+        let red = (p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8);
+
+        p0 = imgData.data[ul + 1] * matriz[0][0]
+        p1 = imgData.data[uc + 1] * matriz[0][1];
+        p2 = imgData.data[ur + 1] * matriz[0][2];
+        p3 = imgData.data[ml + 1] * matriz[1][0];
+        p4 = imgData.data[mc + 1] * matriz[1][1];
+        p5 = imgData.data[mr + 1] * matriz[1][2];
+        p6 = imgData.data[ll + 1] * matriz[2][0];
+        p7 = imgData.data[lc + 1] * matriz[2][1];
+        p8 = imgData.data[lr + 1] * matriz[2][2];
+        let green = (p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8);
+
+        p0 = imgData.data[ul + 2] * matriz[0][0];
+        p1 = imgData.data[uc + 2] * matriz[0][1];
+        p2 = imgData.data[ur + 2] * matriz[0][2];
+        p3 = imgData.data[ml + 2] * matriz[1][0];
+        p4 = imgData.data[mc + 2] * matriz[1][1];
+        p5 = imgData.data[mr + 2] * matriz[1][2];
+        p6 = imgData.data[ll + 2] * matriz[2][0];
+        p7 = imgData.data[lc + 2] * matriz[2][1];
+        p8 = imgData.data[lr + 2] * matriz[2][2];
+        let blue = (p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8);
+
+        imgData.data[mc] = red;
+        imgData.data[mc + 1] = green;
+        imgData.data[mc + 2] = blue;
+        imgData.data[mc + 3] = imgData.data[lc + 3];
+    }
+
+    function saturacion() {
+        let imgData = ctx.getImageData(0, 0, image.width, image.height)
+
+        for (let x = 0; x < imgData.width; x++) {
+            for (let y = 0; y < imgData.height; y++) {
+                let r = getRed(imgData, x, y);
+                let g = getGreen(imgData, x, y);
+                let b = getBlue(imgData, x, y);
+                let hsl = RGBtoHSL(r, g, b);
+                hsl[1] = hsl[1] + 0.2;
+                let rgb = HSLtoRGB(hsl[0], hsl[1], hsl[2]);
+
+                setPixel(imgData, x, y, rgb[0], rgb[1], rgb[2], opacidad);
+            }
+        }
+
+        context.putImageData(imgData, 0, 0);
+    }
 
     document.querySelector("#vaciar").addEventListener("click", () => {
         vaciarCanvas()
@@ -126,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function oMousePos(canvas, evt) {
-        var ClientRect = canvas.getBoundingClientRect();
+        let ClientRect = canvas.getBoundingClientRect();
         return {
             x: Math.round(evt.clientX - ClientRect.left),
             y: Math.round(evt.clientY - ClientRect.top)
@@ -195,6 +265,14 @@ document.addEventListener("DOMContentLoaded", function() {
         ctx.putImageData(imageData, 0, 0);
     })
 
+    document.querySelector("#setBlur").addEventListener("click", () => {
+        setBlur()
+    })
+    document.querySelector("#setBordes").addEventListener("click", () => {
+        setBordes()
+        alert("Disclaimer: No se por que no funciona")
+    })
+
     function setPixelNegative(imageData, x, y) {
         let index = (x + y * imageData.height) * 4;
         imageData.data[index + 0] = 255 - imageData.data[index + 0];
@@ -204,9 +282,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function setPixelBinarizado(imageData, x, y) {
         let index = (x + y * imageData.height) * 4;
-        imageData.data[index + 0] = setBinarizado(imageData.data[index + 0]);
-        imageData.data[index + 1] = setBinarizado(imageData.data[index + 1]);
-        imageData.data[index + 2] = setBinarizado(imageData.data[index + 2]);
+        let prom = setBinarizado(
+            imageData.data[index + 0] + imageData.data[index + 1] + imageData.data[index + 2]
+        )
+        imageData.data[index + 0] = prom;
+        imageData.data[index + 1] = prom;
+        imageData.data[index + 2] = prom;
     }
 
     function setPixelGris(imageData, x, y) {
@@ -240,11 +321,40 @@ document.addEventListener("DOMContentLoaded", function() {
         imageData.data[index + 2] = grises
     }
 
+    function setPixelBlur(imageData, index, r, g, b) {
+        imageData.data[index + 0] = r
+        imageData.data[index + 1] = g
+        imageData.data[index + 2] = b
+    }
+
     function setBinarizado(value) {
         if (value > (255 / 2)) {
             return 255
         } else {
             return 0
         }
+    }
+
+    function setPixel(imgData, x, y, r, g, b, a) {
+        let index = (x + y * imgData.width) * 4;
+        imgData.data[index] = r;
+        imgData.data[index + 1] = g;
+        imgData.data[index + 2] = b;
+        imgData.data[index + 3] = a;
+    }
+
+    function getRed(imgData, x, y) {
+        let index = (x + y * imgData.width) * 4;
+        return imgData.data[index];
+    }
+
+    function getGreen(imgData, x, y) {
+        let index = (x + y * imgData.width) * 4;
+        return imgData.data[index + 1];
+    }
+
+    function getBlue(imgData, x, y) {
+        let index = (x + y * imgData.width) * 4;
+        return imgData.data[index + 2];
     }
 })
