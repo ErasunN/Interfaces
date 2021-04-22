@@ -52,20 +52,21 @@
                     <h5 class="card-title">Nicolas Erasun</h5>
                     <input type="file" id="inputFile" />
                     <div class="row">
-                        <p>Color: <input type="color" id="setColor"></p>
-                        <button id="eraser">Gomita</button>
-                        <button id="vaciar">Vaciar Canvas</button>
+                        <p class=" m-2">Color: <input type="color" id="setColor"></p>
+                        <p class=" m-2">Tamanio: <input type="range" id="setTamanio" value="1"></p>
+                        <button class="btn btn-info m-2" id="vaciar">Vaciar Canvas</button>
                     </div>
                     <div class="row">
-                        <button id="setNegativo">Negativo</button>
-                        <button id="setEscalaGris">Gris</button>
-                        <button id="setBinarizado">Fotocopia</button>
-                        <button id="setBrillo">Brillo</button>
-                        <button id="setSepia">Sepia</button>
-                        <button id="setBlur">Blur</button>
-                        <button id="setBordes">Bordes</button>
+                        <button class="btn btn-info m-2" id="setNegativo">Negativo</button>
+                        <button class="btn btn-info m-2" id="setEscalaGris">Gris</button>
+                        <button class="btn btn-info m-2" id="setBinarizado">Fotocopia</button>
+                        <button class="btn btn-info m-2" id="setBrillo">Brillo</button>
+                        <button class="btn btn-info m-2" id="setSepia">Sepia</button>
+                        <button class="btn btn-info m-2" id="setBlur">Blur</button>
+                        <button class="btn btn-info m-2" id="setBordes">Bordes</button>
                     </div>
                     <canvas class="container_canvas" id="myPaint" width="600" height="400"></canvas>
+                    <button class="btn btn-info m-2" id="download">Descargar</button>
                 </div>
             </section>
         </div>

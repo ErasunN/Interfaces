@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function() {
     let ctx = canvasPaint.getContext("2d")
     let line = false;
     let erasing = false;
-    let canDraw = true;
     let image = null
 
     let inputImg = document.querySelector("#inputFile")
@@ -26,18 +25,56 @@ document.addEventListener("DOMContentLoaded", function() {
     function setBordes() {
         let imgData = ctx.getImageData(0, 0, image.width, image.height);
 
-        let matrizBordes = [
-            [-1, -1, -1],
-            [-1, 8, -1],
-            [-1, -1, -1]
-        ]
+        let matriz = [
+            [-2, -2, -2],
+            [-2, 8, -2],
+            [-2, -2, -2]
+        ];
+
         for (let x = 0; x < imgData.width; x++) {
             for (let y = 0; y < imgData.height; y++) {
-                pixelMatriz(imgData, x, y, matrizBordes)
+                pixelMatriz(imgData, x, y, matriz);
             }
         }
 
         ctx.putImageData(imgData, 0, 0);
+    }
+
+    function pixelMatriz(imgData, x, y, matriz) {
+        let r = Math.floor(
+            getRed(imgData, x - 1, y - 1) * matriz[0][0] +
+            getRed(imgData, x, y - 1) * matriz[0][1] +
+            getRed(imgData, x + 1, y - 1) * matriz[0][2] +
+            getRed(imgData, x - 1, y) * matriz[1][0] +
+            getRed(imgData, x, y) * matriz[1][1] +
+            getRed(imgData, x + 1, y) * matriz[1][2] +
+            getRed(imgData, x - 1, y + 1) * matriz[2][0] +
+            getRed(imgData, x, y + 1) * matriz[2][1] +
+            getRed(imgData, x + 1, y + 1) * matriz[2][2]);
+
+        let g = Math.floor(
+            getGreen(imgData, x - 1, y - 1) * matriz[0][0] +
+            getGreen(imgData, x, y - 1) * matriz[0][1] +
+            getGreen(imgData, x + 1, y - 1) * matriz[0][2] +
+            getGreen(imgData, x - 1, y) * matriz[1][0] +
+            getGreen(imgData, x, y) * matriz[1][1] +
+            getGreen(imgData, x + 1, y) * matriz[1][2] +
+            getGreen(imgData, x - 1, y + 1) * matriz[2][0] +
+            getGreen(imgData, x, y + 1) * matriz[2][1] +
+            getGreen(imgData, x + 1, y + 1) * matriz[2][2]);
+
+        let b = Math.floor(
+            getBlue(imgData, x - 1, y - 1) * matriz[0][0] +
+            getBlue(imgData, x, y - 1) * matriz[0][1] +
+            getBlue(imgData, x + 1, y - 1) * matriz[0][2] +
+            getBlue(imgData, x - 1, y) * matriz[1][0] +
+            getBlue(imgData, x, y) * matriz[1][1] +
+            getBlue(imgData, x + 1, y) * matriz[1][2] +
+            getBlue(imgData, x - 1, y + 1) * matriz[2][0] +
+            getBlue(imgData, x, y + 1) * matriz[2][1] +
+            getBlue(imgData, x + 1, y + 1) * matriz[2][2]);
+
+        setPixel(imgData, x, y, r, g, b, 255);
     }
 
     function setBlur() {
@@ -48,66 +85,14 @@ document.addEventListener("DOMContentLoaded", function() {
             [1 / 9, 1 / 9, 1 / 9],
             [1 / 9, 1 / 9, 1 / 9]
         ]
-        for (let x = 0; x < imgData.width; x++) {
-            for (let y = 0; y < imgData.height; y++) {
-                pixelMatriz(imgData, x, y, matrizBlur)
+        for (let x = 0; x < canvasPaint.width; x++) {
+            for (let y = 0; y < canvasPaint.height; y++) {
+                //pixelMatriz(imgData, x, y, matrizBlur)
+                promedioMatriz(imgData, x, y, matrizBlur)
             }
         }
 
         ctx.putImageData(imgData, 0, 0);
-    }
-
-    let pixelMatriz = (imgData, x, y, matriz) => {
-        //Variables de ubicacion de pixel
-        let ul = ((x - 1 + imgData.width) % imgData.width + imgData.width * ((y - 1 + imgData.height) % imgData.height)) * 4;
-        let uc = ((x - 0 + imgData.width) % imgData.width + imgData.width * ((y - 1 + imgData.height) % imgData.height)) * 4;
-        let ur = ((x + 1 + imgData.width) % imgData.width + imgData.width * ((y - 1 + imgData.height) % imgData.height)) * 4;
-        let ml = ((x - 1 + imgData.width) % imgData.width + imgData.width * ((y + 0 + imgData.height) % imgData.height)) * 4;
-        let mc = ((x - 0 + imgData.width) % imgData.width + imgData.width * ((y + 0 + imgData.height) % imgData.height)) * 4;
-        let mr = ((x + 1 + imgData.width) % imgData.width + imgData.width * ((y + 0 + imgData.height) % imgData.height)) * 4;
-        let ll = ((x - 1 + imgData.width) % imgData.width + imgData.width * ((y + 1 + imgData.height) % imgData.height)) * 4;
-        let lc = ((x - 0 + imgData.width) % imgData.width + imgData.width * ((y + 1 + imgData.height) % imgData.height)) * 4;
-        let lr = ((x + 1 + imgData.width) % imgData.width + imgData.width * ((y + 1 + imgData.height) % imgData.height)) * 4;
-
-        let p0, p1, p2, p3, p4, p5, p6, p7, p8
-
-        p0 = imgData.data[ul] * matriz[0][0];
-        p1 = imgData.data[uc] * matriz[0][1];
-        p2 = imgData.data[ur] * matriz[0][2];
-        p3 = imgData.data[ml] * matriz[1][0];
-        p4 = imgData.data[mc] * matriz[1][1];
-        p5 = imgData.data[mr] * matriz[1][2];
-        p6 = imgData.data[ll] * matriz[2][0];
-        p7 = imgData.data[lc] * matriz[2][1];
-        p8 = imgData.data[lr] * matriz[2][2];
-        let red = (p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8);
-
-        p0 = imgData.data[ul + 1] * matriz[0][0]
-        p1 = imgData.data[uc + 1] * matriz[0][1];
-        p2 = imgData.data[ur + 1] * matriz[0][2];
-        p3 = imgData.data[ml + 1] * matriz[1][0];
-        p4 = imgData.data[mc + 1] * matriz[1][1];
-        p5 = imgData.data[mr + 1] * matriz[1][2];
-        p6 = imgData.data[ll + 1] * matriz[2][0];
-        p7 = imgData.data[lc + 1] * matriz[2][1];
-        p8 = imgData.data[lr + 1] * matriz[2][2];
-        let green = (p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8);
-
-        p0 = imgData.data[ul + 2] * matriz[0][0];
-        p1 = imgData.data[uc + 2] * matriz[0][1];
-        p2 = imgData.data[ur + 2] * matriz[0][2];
-        p3 = imgData.data[ml + 2] * matriz[1][0];
-        p4 = imgData.data[mc + 2] * matriz[1][1];
-        p5 = imgData.data[mr + 2] * matriz[1][2];
-        p6 = imgData.data[ll + 2] * matriz[2][0];
-        p7 = imgData.data[lc + 2] * matriz[2][1];
-        p8 = imgData.data[lr + 2] * matriz[2][2];
-        let blue = (p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8);
-
-        imgData.data[mc] = red;
-        imgData.data[mc + 1] = green;
-        imgData.data[mc + 2] = blue;
-        imgData.data[mc + 3] = imgData.data[lc + 3];
     }
 
     function saturacion() {
@@ -138,62 +123,110 @@ document.addEventListener("DOMContentLoaded", function() {
         ctx.clearRect(0, 0, canvasPaint.width, canvasPaint.height);
     }
 
-    if (canDraw) {
-        canvasPaint.addEventListener("mousedown", (e) => {
+
+    canvasPaint.addEventListener("mousedown", (e) => {
+            e.preventDefault()
+            console.log();
+            if (e.which === 1) {
+                leftClick(e)
+            } else if (e.which === 3) {
+                rightClick(e)
+            }
+        })
+        /* canvasPaint.addEventListener("mousedown", (e) => {
+            console.log(e);
+            erasing = false
             line = true
             let mousePos = oMousePos(canvasPaint, e)
             ctx.beginPath();
             ctx.moveTo(mousePos.x, mousePos.y);
             canvasPaint.addEventListener("mousemove", startDraw)
-        })
+        }) */
 
-        canvasPaint.addEventListener("mouseleave", (e) => {
-            line = false
-        })
 
-        canvasPaint.addEventListener("mouseup", (e) => {
-            line = false
-        })
-
-        function startDraw(e) {
-            console.log(line);
-
-            let mousePos = oMousePos(canvasPaint, e)
-
-            if (line) {
-                ctx.lineTo(mousePos.x, mousePos.y)
-                ctx.stroke()
-            }
-        }
-
-        document.querySelector("#setColor").addEventListener("change", (e) => {
-            ctx.strokeStyle = e.target.value;
-        })
-    } else {
-        canvasPaint.addEventListener("mousedown", (e) => {
-            erasing = true;
-            let mousePos = oMousePos(canvasPaint, e)
-            canvasPaint.addEventListener("mousemove", () => {
-                erase(mousePos)
-            })
-        })
-
-        function erase(e) {
-            console.log(erasing);
-
-            if (erasing) {
-                ctx.clearRect(e.x, e.y, 10, 10)
-            }
-        }
-
-        canvasPaint.addEventListener("mouseleave", (e) => {
-            erasing = false
-        })
-
-        canvasPaint.addEventListener("mouseup", (e) => {
-            erasing = false
-        })
+    let leftClick = (e) => {
+        erasing = false
+        line = true
+        let mousePos = oMousePos(canvasPaint, e)
+        ctx.beginPath();
+        ctx.moveTo(mousePos.x, mousePos.y);
+        canvasPaint.removeEventListener("mousemove", erase)
+        canvasPaint.addEventListener("mousemove", startDraw)
     }
+
+    let rightClick = (e) => {
+        erasing = true
+        canvasPaint.removeEventListener("mousemove", startDraw)
+        canvasPaint.addEventListener("mousemove", erase)
+    }
+    canvasPaint.addEventListener("mouseleave", (e) => {
+        line = false
+    })
+
+    canvasPaint.addEventListener("mouseup", (e) => {
+        e.preventDefault
+        line = false
+    })
+
+    /* canvasPaint.addEventListener("contextmenu", (e) => {
+        e.preventDefault()
+        erasing = true
+        canvasPaint.removeEventListener("mousemove", startDraw)
+        canvasPaint.addEventListener("mousemove", erase)
+    }) */
+
+    function erase(e) {
+        let mousePos = oMousePos(canvasPaint, e)
+
+        if (erasing) {
+            ctx.clearRect(mousePos.x, mousePos.y, 10, 10)
+        }
+
+    }
+
+    function startDraw(e) {
+        console.log(line);
+
+        let mousePos = oMousePos(canvasPaint, e)
+
+        if (line) {
+            ctx.lineTo(mousePos.x, mousePos.y)
+            ctx.stroke()
+        }
+    }
+
+    document.querySelector("#setColor").addEventListener("change", (e) => {
+        ctx.strokeStyle = e.target.value;
+    })
+
+    document.querySelector("#setTamanio").addEventListener("change", (e) => {
+        ctx.lineWidth = e.target.value;
+    })
+
+    canvasPaint.addEventListener("mousedown", (e) => {
+        erasing = true;
+        let mousePos = oMousePos(canvasPaint, e)
+        canvasPaint.addEventListener("mousemove", () => {
+            erase(mousePos)
+        })
+    })
+
+    /* function erase(e) {
+        console.log(erasing);
+
+        if (erasing) {
+            ctx.clearRect(e.x, e.y, 10, 10)
+        }
+    }
+
+    canvasPaint.addEventListener("mouseleave", (e) => {
+        erasing = false
+    })
+
+    canvasPaint.addEventListener("mouseup", (e) => {
+        erasing = false
+    } */
+
 
     function oMousePos(canvas, evt) {
         let ClientRect = canvas.getBoundingClientRect();
@@ -202,17 +235,6 @@ document.addEventListener("DOMContentLoaded", function() {
             y: Math.round(evt.clientY - ClientRect.top)
         }
     }
-
-    document.querySelector("#eraser").addEventListener("click", () => {
-        canDraw = !canDraw
-        console.log(line, erasing, canDraw);
-
-        if (!canDraw) {
-            document.querySelector("#eraser").innerHTML = "Lapiz"
-        } else {
-            document.querySelector("#eraser").innerHTML = "Goma"
-        }
-    })
 
     document.querySelector("#setNegativo").addEventListener("click", () => {
         let imageData = ctx.getImageData(0, 0, image.width, image.height)
@@ -293,10 +315,11 @@ document.addEventListener("DOMContentLoaded", function() {
     function setPixelGris(imageData, x, y) {
         let index = (x + y * imageData.height) * 4;
         let grises = Number(
-            (imageData.data[index + 0] +
+            (
+                imageData.data[index + 0] +
                 imageData.data[index + 1] +
-                imageData.data[index + 2]) /
-            3)
+                imageData.data[index + 2]) / 3
+        )
         imageData.data[index + 0] = grises
         imageData.data[index + 1] = grises
         imageData.data[index + 2] = grises
