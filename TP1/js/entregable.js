@@ -168,20 +168,12 @@ document.addEventListener("DOMContentLoaded", function() {
         line = false
     })
 
-    /* canvasPaint.addEventListener("contextmenu", (e) => {
-        e.preventDefault()
-        erasing = true
-        canvasPaint.removeEventListener("mousemove", startDraw)
-        canvasPaint.addEventListener("mousemove", erase)
-    }) */
-
     function erase(e) {
         let mousePos = oMousePos(canvasPaint, e)
 
         if (erasing) {
-            ctx.clearRect(mousePos.x, mousePos.y, 10, 10)
+            ctx.clearRect(mousePos.x, mousePos.y, ctx.lineWidth, ctx.lineWidth)
         }
-
     }
 
     function startDraw(e) {
@@ -210,23 +202,6 @@ document.addEventListener("DOMContentLoaded", function() {
             erase(mousePos)
         })
     })
-
-    /* function erase(e) {
-        console.log(erasing);
-
-        if (erasing) {
-            ctx.clearRect(e.x, e.y, 10, 10)
-        }
-    }
-
-    canvasPaint.addEventListener("mouseleave", (e) => {
-        erasing = false
-    })
-
-    canvasPaint.addEventListener("mouseup", (e) => {
-        erasing = false
-    } */
-
 
     function oMousePos(canvas, evt) {
         let ClientRect = canvas.getBoundingClientRect();
@@ -293,6 +268,13 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector("#setBordes").addEventListener("click", () => {
         setBordes()
         alert("Disclaimer: No se por que no funciona")
+    })
+
+    document.querySelector("#download").addEventListener("click", () => {
+        let link = document.createElement('a');
+        link.download = 'imagenEditada.png';
+        link.href = canvasPaint.toDataURL()
+        link.click();
     })
 
     function setPixelNegative(imageData, x, y) {
