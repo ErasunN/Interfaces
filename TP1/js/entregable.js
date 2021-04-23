@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
             image = new Image();
             image.src = reader.result;
             image.onload = () => {
-                ctx.drawImage(image, 0, 0, image.width, image.height);
+                ctx.drawImage(image, 0, 0, canvasPaint.width, canvasPaint.height);
             }
         }
         reader.readAsDataURL(inputImg.files[0]);
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function setBordes() {
-        let imgData = ctx.getImageData(0, 0, image.width, image.height);
+        let imgData = ctx.getImageData(0, 0, canvasPaint.width, canvasPaint.height);
 
         let matriz = [
             [-2, -2, -2],
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function setBlur() {
-        let imgData = ctx.getImageData(0, 0, image.width, image.height);
+        let imgData = ctx.getImageData(0, 0, canvasPaint.width, canvasPaint.height);
 
         let matrizBlur = [
             [1 / 9, 1 / 9, 1 / 9],
@@ -87,8 +87,7 @@ document.addEventListener("DOMContentLoaded", function() {
         ]
         for (let x = 0; x < canvasPaint.width; x++) {
             for (let y = 0; y < canvasPaint.height; y++) {
-                //pixelMatriz(imgData, x, y, matrizBlur)
-                promedioMatriz(imgData, x, y, matrizBlur)
+                pixelMatriz(imgData, x, y, matrizBlur)
             }
         }
 
@@ -96,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function saturacion() {
-        let imgData = ctx.getImageData(0, 0, image.width, image.height)
+        let imgData = ctx.getImageData(0, 0, canvasPaint.width, canvasPaint.height)
 
         //recorro mi imagen
         for (let x = 0; x < imgData.width; x++) {
@@ -171,6 +170,25 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    }
+
+    function setNegativo() {
+        let imageData = ctx.getImageData(0, 0, canvasPaint.width, canvasPaint.height)
+        console.log(imageData);
+        for (let x = 0; x < canvasPaint.width; x++) {
+            for (let y = 0; y < canvasPaint.height; y++) {
+                setPixelNegativo(imageData, x, y)
+            }
+        }
+        ctx.putImageData(imageData, 0, 0);
+    }
+
+    let setPixelNegativo = (imageData, x, y) => {
+        let index = (x + y * imageData.width) * 4;
+        imageData.data[index + 0] = 255 - imageData.data[index + 0];
+        imageData.data[index + 1] = 255 - imageData.data[index + 1];
+        imageData.data[index + 2] = 255 - imageData.data[index + 2];
+
     }
 
     document.querySelector("#vaciar").addEventListener("click", () => {
@@ -266,20 +284,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.querySelector("#setNegativo").addEventListener("click", () => {
-        let imageData = ctx.getImageData(0, 0, image.width, image.height)
-        for (let x = 0; x < image.width; x++) {
-            for (let y = 0; y < image.height; y++) {
-                setPixelNegative(imageData, x, y)
-            }
-        }
-        ctx.putImageData(imageData, 0, 0);
-
+        setNegativo()
     })
 
     document.querySelector("#setEscalaGris").addEventListener("click", () => {
-        let imageData = ctx.getImageData(0, 0, image.width, image.height)
-        for (let x = 0; x < image.width; x++) {
-            for (let y = 0; y < image.height; y++) {
+        let imageData = ctx.getImageData(0, 0, canvasPaint.width, canvasPaint.height)
+        for (let x = 0; x < canvasPaint.width; x++) {
+            for (let y = 0; y < canvasPaint.height; y++) {
                 setPixelGris(imageData, x, y)
             }
         }
@@ -287,9 +298,9 @@ document.addEventListener("DOMContentLoaded", function() {
     })
 
     document.querySelector("#setBinarizado").addEventListener("click", () => {
-        let imageData = ctx.getImageData(0, 0, image.width, image.height)
-        for (let x = 0; x < image.width; x++) {
-            for (let y = 0; y < image.height; y++) {
+        let imageData = ctx.getImageData(0, 0, canvasPaint.width, canvasPaint.height)
+        for (let x = 0; x < canvasPaint.width; x++) {
+            for (let y = 0; y < canvasPaint.height; y++) {
                 setPixelBinarizado(imageData, x, y)
             }
         }
@@ -297,9 +308,9 @@ document.addEventListener("DOMContentLoaded", function() {
     })
 
     document.querySelector("#setBrillo").addEventListener("click", () => {
-        let imageData = ctx.getImageData(0, 0, image.width, image.height)
-        for (let x = 0; x < image.width; x++) {
-            for (let y = 0; y < image.height; y++) {
+        let imageData = ctx.getImageData(0, 0, canvasPaint.width, canvasPaint.height)
+        for (let x = 0; x < canvasPaint.width; x++) {
+            for (let y = 0; y < canvasPaint.height; y++) {
                 setPixelBrillo(imageData, x, y)
             }
         }
@@ -307,9 +318,9 @@ document.addEventListener("DOMContentLoaded", function() {
     })
 
     document.querySelector("#setSepia").addEventListener("click", () => {
-        let imageData = ctx.getImageData(0, 0, image.width, image.height)
-        for (let x = 0; x < image.width; x++) {
-            for (let y = 0; y < image.height; y++) {
+        let imageData = ctx.getImageData(0, 0, canvasPaint.width, canvasPaint.height)
+        for (let x = 0; x < canvasPaint.width; x++) {
+            for (let y = 0; y < canvasPaint.height; y++) {
                 setPixelSepia(imageData, x, y)
             }
         }
@@ -335,17 +346,10 @@ document.addEventListener("DOMContentLoaded", function() {
         link.click();
     })
 
-    function setPixelNegative(imageData, x, y) {
-        let index = (x + y * imageData.height) * 4;
-        imageData.data[index + 0] = 255 - imageData.data[index + 0];
-        imageData.data[index + 1] = 255 - imageData.data[index + 1];
-        imageData.data[index + 2] = 255 - imageData.data[index + 2];
-    }
-
     function setPixelBinarizado(imageData, x, y) {
-        let index = (x + y * imageData.height) * 4;
+        let index = (x + y * canvasPaint.width) * 4;
         let prom = setBinarizado(
-            imageData.data[index + 0] + imageData.data[index + 1] + imageData.data[index + 2]
+            (imageData.data[index + 0] + imageData.data[index + 1] + imageData.data[index + 2]) / 3
         )
         imageData.data[index + 0] = prom;
         imageData.data[index + 1] = prom;
@@ -353,7 +357,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function setPixelGris(imageData, x, y) {
-        let index = (x + y * imageData.height) * 4;
+        let index = (x + y * canvasPaint.width) * 4;
         let grises = Number(
             (
                 imageData.data[index + 0] +
@@ -366,14 +370,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function setPixelBrillo(imageData, x, y) {
-        let index = (x + y * imageData.height) * 4;
+        let index = (x + y * canvasPaint.width) * 4;
         imageData.data[index + 0] = imageData.data[index + 0] + 30;
         imageData.data[index + 1] = imageData.data[index + 1] + 30;
         imageData.data[index + 2] = imageData.data[index + 2] + 30;
     }
 
     function setPixelSepia(imageData, x, y) {
-        let index = (x + y * imageData.height) * 4;
+        let index = (x + y * canvasPaint.width) * 4;
         let grises = Number(
             (imageData.data[index + 0] +
                 imageData.data[index + 1] +
@@ -382,12 +386,6 @@ document.addEventListener("DOMContentLoaded", function() {
         imageData.data[index + 0] = grises + 50
         imageData.data[index + 1] = grises + 25
         imageData.data[index + 2] = grises
-    }
-
-    function setPixelBlur(imageData, index, r, g, b) {
-        imageData.data[index + 0] = r
-        imageData.data[index + 1] = g
-        imageData.data[index + 2] = b
     }
 
     function setBinarizado(value) {
