@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         let img = new Image()
-        img.src = "images/wom.jpg"
+        img.src = "TP1/images/wom.jpg"
 
         img.onload = () => {
             myDrawImage(img)
