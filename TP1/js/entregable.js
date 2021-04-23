@@ -98,20 +98,79 @@ document.addEventListener("DOMContentLoaded", function() {
     function saturacion() {
         let imgData = ctx.getImageData(0, 0, image.width, image.height)
 
+        //recorro mi imagen
         for (let x = 0; x < imgData.width; x++) {
             for (let y = 0; y < imgData.height; y++) {
+                //obtengo cada color por cada pixel
                 let r = getRed(imgData, x, y);
                 let g = getGreen(imgData, x, y);
                 let b = getBlue(imgData, x, y);
-                let hsl = RGBtoHSL(r, g, b);
+                //transformo los valores rgb a hsl
+                let hsl = rgbToHsl(r, g, b);
                 hsl[1] = hsl[1] + 0.2;
-                let rgb = HSLtoRGB(hsl[0], hsl[1], hsl[2]);
+                //vuelvo el hsl a rgb
+                let rgb = hslToRgb(hsl[0], hsl[1], hsl[2]);
 
-                setPixel(imgData, x, y, rgb[0], rgb[1], rgb[2], opacidad);
+                setPixel(imgData, x, y, rgb[0], rgb[1], rgb[2], 255);
             }
         }
 
-        context.putImageData(imgData, 0, 0);
+        ctx.putImageData(imgData, 0, 0);
+    }
+
+    function rgbToHsl(r, g, b) {
+        //funcion rgb a hsl encontrada en inet
+        r /= 255, g /= 255, b /= 255;
+        var max = Math.max(r, g, b),
+            min = Math.min(r, g, b);
+        var h, s, l = (max + min) / 2;
+
+        if (max == min) {
+            h = s = 0; // achromatic
+        } else {
+            var d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+            }
+            h /= 6;
+        }
+
+        return [h, s, l];
+    }
+
+    function hslToRgb(h, s, l) {
+        //funcion hsl a rgb encontrada en inet
+        var r, g, b;
+
+        if (s == 0) {
+            r = g = b = l; // achromatic
+        } else {
+            var hue2rgb = function hue2rgb(p, q, t) {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1 / 6) return p + (q - p) * 6 * t;
+                if (t < 1 / 2) return q;
+                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                return p;
+            }
+
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1 / 3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1 / 3);
+        }
+
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     }
 
     document.querySelector("#vaciar").addEventListener("click", () => {
@@ -125,27 +184,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     canvasPaint.addEventListener("mousedown", (e) => {
+        canvasPaint.addEventListener("contextmenu", (e) => {
             e.preventDefault()
-            console.log();
-            if (e.which === 1) {
-                leftClick(e)
-            } else if (e.which === 3) {
-                rightClick(e)
-            }
         })
-        /* canvasPaint.addEventListener("mousedown", (e) => {
-            console.log(e);
-            erasing = false
-            line = true
-            let mousePos = oMousePos(canvasPaint, e)
-            ctx.beginPath();
-            ctx.moveTo(mousePos.x, mousePos.y);
-            canvasPaint.addEventListener("mousemove", startDraw)
-        }) */
-
+        console.log();
+        if (e.which === 1) {
+            leftClick(e)
+        } else if (e.which === 3) {
+            rightClick(e)
+        }
+    })
 
     let leftClick = (e) => {
-        erasing = false
         line = true
         let mousePos = oMousePos(canvasPaint, e)
         ctx.beginPath();
@@ -160,16 +210,20 @@ document.addEventListener("DOMContentLoaded", function() {
         canvasPaint.addEventListener("mousemove", erase)
     }
     canvasPaint.addEventListener("mouseleave", (e) => {
+        erasing = false
+
         line = false
     })
 
     canvasPaint.addEventListener("mouseup", (e) => {
-        e.preventDefault
+        erasing = false
+
         line = false
     })
 
     function erase(e) {
         let mousePos = oMousePos(canvasPaint, e)
+        ctx.moveTo(mousePos.x, mousePos.y);
 
         if (erasing) {
             ctx.clearRect(mousePos.x, mousePos.y, ctx.lineWidth, ctx.lineWidth)
@@ -268,6 +322,10 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector("#setBordes").addEventListener("click", () => {
         setBordes()
         alert("Disclaimer: No se por que no funciona")
+    })
+
+    document.querySelector("#setSaturado").addEventListener("click", () => {
+        saturacion()
     })
 
     document.querySelector("#download").addEventListener("click", () => {
