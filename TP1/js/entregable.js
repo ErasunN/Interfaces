@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function() {
         ctx.moveTo(mousePos.x, mousePos.y);
 
         if (erasing) {
-            ctx.clearRect(mousePos.x, mousePos.y, ctx.lineWidth, ctx.lineWidth)
+            ctx.clearRect(mousePos.x - 5, mousePos.y - 5, 10, 10)
         }
     }
 
