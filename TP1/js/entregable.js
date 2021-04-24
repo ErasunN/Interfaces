@@ -332,7 +332,6 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     document.querySelector("#setBordes").addEventListener("click", () => {
         setBordes()
-        alert("Disclaimer: No se por que no funciona")
     })
 
     document.querySelector("#setSaturado").addEventListener("click", () => {
