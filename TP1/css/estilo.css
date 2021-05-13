@@ -1,49 +1,21 @@
+body {
+    background-color: greenyellow;
+}
+
 nav {
-    background-color: rgb(52,79,97);
+    background-color: rgb(52, 79, 97);
     padding: 3px;
 }
 
-h1, h2 {
+h1 {
     margin-top: 100px;
 }
 
-#buttonGrayScale, #buttonColour {
-    padding: 25px;
-    background-color: rgba(255, 170, 154, 1);
-}
-
-a, span, .nav-link {
-    color:white;
-    text-decoration: none;
-}
-
-a:hover { 
-    color: rgba(255, 170, 154, 1);
-}
-
-footer {
-    text-align: center;
-    padding: 20px;
-    margin-top: 100px;
-    background-color: rgb(165, 165, 159);
-    color: white;
-    font-weight: 500;
-}
 canvas {
     margin-bottom: 25px;
+    background-color: white;
 }
-.logoExa {
-    padding-bottom: 5px;
-}
-div.container_info_footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.codExample {
-color: orangered;
-}
+
 .container_canvas {
     border: 1px solid;
 }

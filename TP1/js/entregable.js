@@ -1,13 +1,18 @@
 "use strict"
 document.addEventListener("DOMContentLoaded", function() {
-    let canvasPaint = document.querySelector("#myPaint")
-    let ctx = canvasPaint.getContext("2d")
+    let canvasPaint = document.querySelector("#myPaint");
+    let ctx = canvasPaint.getContext("2d");
     let line = false;
     let erasing = false;
-    let image = null
+    let image = null;
 
-    let inputImg = document.querySelector("#inputFile")
-    inputImg.addEventListener("change", () => {
+    let inputImg = document.querySelector("#inputFile");
+
+    inputImg.addEventListener("click", () => {
+        inputImg.value = "";
+    })
+
+    inputImg.addEventListener("input", () => {
         vaciarCanvas()
         let reader = new FileReader();
 
@@ -15,11 +20,10 @@ document.addEventListener("DOMContentLoaded", function() {
             image = new Image();
             image.src = reader.result;
             image.onload = () => {
-                ctx.drawImage(image, 0, 0, canvasPaint.width, canvasPaint.height);
+                ctx.drawImage(image, 0, 0, image.width, image.height);
             }
         }
         reader.readAsDataURL(inputImg.files[0]);
-
     });
 
     function setBordes() {
@@ -174,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function setNegativo() {
         let imageData = ctx.getImageData(0, 0, canvasPaint.width, canvasPaint.height)
-        console.log(imageData);
         for (let x = 0; x < canvasPaint.width; x++) {
             for (let y = 0; y < canvasPaint.height; y++) {
                 setPixelNegativo(imageData, x, y)
@@ -205,7 +208,6 @@ document.addEventListener("DOMContentLoaded", function() {
         canvasPaint.addEventListener("contextmenu", (e) => {
             e.preventDefault()
         })
-        console.log();
         if (e.which === 1) {
             leftClick(e)
         } else if (e.which === 3) {
@@ -227,6 +229,7 @@ document.addEventListener("DOMContentLoaded", function() {
         canvasPaint.removeEventListener("mousemove", startDraw)
         canvasPaint.addEventListener("mousemove", erase)
     }
+
     canvasPaint.addEventListener("mouseleave", (e) => {
         erasing = false
 
@@ -249,8 +252,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function startDraw(e) {
-        console.log(line);
-
         let mousePos = oMousePos(canvasPaint, e)
 
         if (line) {

@@ -12,78 +12,58 @@
 </head>
 
 <body>
-    <header class="header">
-        <nav class="navbar-expand-lg fixed-top">
-            <ul class="nav justify-content-center">
-                <li>
-                    <span class="nav-link">
-                        <a href="#TP1">
-                            Interfaces de Usuario e Interacción
-                        </a>
-                    </span>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <div class="container-fluid">
+            <p class="navbar-brand my-md-auto">Nicolas Erasun</p>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item text-white">
+                        Interfaces - Entregable 1
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <section>
         <div class="container">
-            <br id="TP1"><br>
-            <!-- <h1>Práctica de clase 1</h1>
-            <section id="ej_0">
-                <div class="container">
-                    <h3>Muneco de nieve y subir foto</h3>
-                    <h5 class="card-title">Desafío</h5>
-                    <canvas class="container_canvas" id="desafio" width="600" height="400"></canvas>
-                </div>
-                <button id="drawSnowMan">Draw a SnowMan!</button>
-                <button id="setImage">Set the Image!</button>
-            </section>
-            <section id="ej_0">
-                <div class="container">
-                    <h3>Practica colores recorriendo imageData</h3>
-                    <h5 class="card-title"></h5>
-                    <canvas class="container_canvas" id="imgFiltro" width="600" height="400"></canvas>
-                    <button id="setFiltro">Try the colors</button>
-                </div>
-            </section> -->
             <section>
                 <div class="paintContainer">
-                    <h3>Paint + Imagen con Filtros (Entregable 1)</h3>
-                    <div class="row">
-                        <input type="file" id="inputFile" class="mx-2 my-auto" />
-                        <p class="mx-2 my-auto">Color: <input type="color" id="setColor"></p>
-                        <p class="mx-2 my-auto">Tamanio: <input type="range" id="setTamanio" value="1"></p>
-                        <button class="btn btn-info m-2" id="vaciar">Vaciar Canvas</button>
+                    <h3>Paint + Imagen con Filtros</h3>
+                    <div class="row bg-success my-2 rounded-pill">
+                        <input type="file" id="inputFile" class="mx-2 my-auto" accept="image/*" />
+                        <p class="mx-2 my-auto badge">Seleccionar color: <input type="color" id="setColor"></p>
+                        <p class="mx-2 my-auto badge">Cambiar tamanio: <input type="range" id="setTamanio" value="1"></p>
+                        <button class="btn btn-warning m-2 rounded-pill" id="vaciar">Vaciar Canvas</button>
                     </div>
                     <div class="row">
-                        <button class="btn btn-info m-2" id="setNegativo">Negativo</button>
-                        <button class="btn btn-info m-2" id="setEscalaGris">Gris</button>
-                        <button class="btn btn-info m-2" id="setBinarizado">Fotocopia</button>
-                        <button class="btn btn-info m-2" id="setBrillo">Brillo</button>
-                        <button class="btn btn-info m-2" id="setSepia">Sepia</button>
-                        <button class="btn btn-info m-2" id="setBlur">Blur</button>
-                        <button class="btn btn-info m-2" id="setBordes">Bordes</button>
-                        <button class="btn btn-info m-2" id="setSaturado">Saturacion</button>
-                        <button class="btn btn-info m-2" id="download">Descargar</button>
+                        <section class="col-1">
+                            <div class="row d-grip gap-2">
+                                <p class="m-0 badge bg-dark text-white w-100 py-1">Filtros:</p>
+                                <button class="btn btn-info mx-auto my-2 w-100" id="setNegativo">Negativo</button>
+                                <button class="btn btn-info mx-auto my-2 w-100" id="setEscalaGris">Gris</button>
+                                <button class="btn btn-info mx-auto my-2 w-100" id="setBinarizado">Fotocopia</button>
+                                <button class="btn btn-info mx-auto my-2 w-100" id="setBrillo">Brillo</button>
+                                <button class="btn btn-info mx-auto my-2 w-100" id="setSepia">Sepia</button>
+                                <button class="btn btn-info mx-auto my-2 w-100" id="setBlur">Blur</button>
+                                <button class="btn btn-info mx-auto my-2 w-100" id="setBordes">Bordes</button>
+                                <button class="btn btn-info mx-auto my-2 w-100" id="setSaturado">Saturacion</button>
+                                <button class="btn btn-success mx-auto my-2 w-100" id="download">Descargar</button>
+                            </div>
+                        </section>
+                        <section class="col-11">
+                            <canvas class="container_canvas" id="myPaint" width="1000" height="500"></canvas>
+                        </section>
                     </div>
-                    <canvas class="container_canvas" id="myPaint" width="1000" height="600"></canvas>
                 </div>
             </section>
         </div>
     </section>
-    <footer class="navbar-expand-lg">
-        <div class="container">
-            <div class="container_info_footer">
-                <img class="logoExa" src="TP1/images/faviconEXA.png" width="50" alt="logo EXA" />
-                <a id="sbSitio">UniCen / FCE / TUDAI / Interfaces de Usuario e Iteracci&oacute;n - Bolivar 2021</a>
-            </div>
-        </div>
-    </footer>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <!-- Script TRABAJO PRÄCTICO -->
-    <!-- <script src="TP1/js/e0.js"></script> -->
     <!-- Script del ENTREGABLE 1 -->
     <script src="TP1/js/entregable.js"></script>
 
