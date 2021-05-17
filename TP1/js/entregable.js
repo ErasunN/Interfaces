@@ -20,7 +20,20 @@ document.addEventListener("DOMContentLoaded", function() {
             image = new Image();
             image.src = reader.result;
             image.onload = () => {
-                ctx.drawImage(image, 0, 0, image.width, image.height);
+                console.log(image.width >= canvasPaint.width && image.height >= canvasPaint.height);
+                if (image.width <= canvasPaint.width && image.height <= canvasPaint.height) {
+                    console.log("img size > canvas size");
+                    ctx.drawImage(image, 0, 0, image.width, image.height);
+                } else if (image.width < canvasPaint.width && image.height >= canvasPaint.height) {
+                    console.log("img height > canvas height");
+                    ctx.drawImage(image, 0, 0, image.width, canvasPaint.height);
+                } else if (image.width >= canvasPaint.width && image.height < canvasPaint.height) {
+                    console.log("img width > canvas width");
+                    ctx.drawImage(image, 0, 0, canvasPaint.width, image.height);
+                } else {
+                    console.log("img size < canvas size");
+                    ctx.drawImage(image, 0, 0, canvasPaint.width, canvasPaint.height);
+                }
             }
         }
         reader.readAsDataURL(inputImg.files[0]);
