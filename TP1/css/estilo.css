@@ -1,5 +1,5 @@
 body {
-    background-color: greenyellow;
+    background-color: #343040;
 }
 
 nav {
@@ -18,4 +18,12 @@ canvas {
 
 .container_canvas {
     border: 1px solid;
+}
+
+.picker {
+    background-color: #D4D26A;
+}
+
+.btnVaciar {
+    background-color: #181812;
 }
